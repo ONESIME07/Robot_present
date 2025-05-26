@@ -55,33 +55,6 @@
     .vert {
       background-color: #d4edda;
     }
-
-    /* BOUTON MAISON */
-    .btn-home {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      width: 40px;
-      height: 40px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 1000;
-      animation: clignote 1s infinite;
-    }
-
-    .btn-home svg {
-      width: 100%;
-      height: 100%;
-      fill: #007bff;
-    }
-
-    @keyframes clignote {
-      0% { opacity: 1; }
-      50% { opacity: 0.2; }
-      100% { opacity: 1; }
-    }
-
     @media screen and (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -105,16 +78,40 @@
         text-align: left;
       }
     }
+
+    /* Style pour bouton de retour */
+    .btn-retour {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      display: inline-block;
+      z-index: 999;
+      animation: clignote 1s infinite alternate;
+    }
+
+    .btn-retour svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes clignote {
+      from { opacity: 1; }
+      to { opacity: 0.3; }
+    }
   </style>
 </head>
 <body>
+  <div id="inclusion-bouton"></div>
 
-  <!-- Bouton Maison -->
-  <a href="essaie.index.html" class="btn-home" title="Retour à l'accueil">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-      <path d="M32 6L4 32h8v26h16V42h8v16h16V32h8L32 6z"/>
-    </svg>
-  </a>
+  <script>
+    fetch("bouton.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("inclusion-bouton").innerHTML = html;
+      });
+  </script>
 
   <h2>Statistiques de présence</h2>
 
@@ -147,13 +144,21 @@
     <tbody></tbody>
   </table>
 
+  <!-- Bouton de retour vers apropos.html -->
+  <a href="apropos.html" class="btn-retour" title="Aller à la page suivante">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="12" fill="#007bff"/>
+      <path fill="#fff" d="M13.5 7l-5 5 5 5V7z"/>
+    </svg>
+  </a>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
   <script>
     const SUPABASE_URL = "https://vdcfcvuursbklnyuuxmt.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkY2ZjdnV1cnNia2xueXV1eG10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxODU3NzMsImV4cCI6MjA2Mzc2MTc3M30.E50vzMUdaoC5Neqjen52QARhz2X8KK0nK2LYvFUkLII";
     let toutesPresences = [];
 
     async function chargerPresences() {
