@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistiques des présences</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    .filters, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    select, input {
+      padding: 5px;
+      font-size: 14px;
+    }
+    .btn-rond {
+      border: none;
+      border-radius: 50%;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+    }
+    .btn-suppr {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    .rouge {
+      background-color: #f8d7da;
+    }
+    .vert {
+      background-color: #d4edda;
+    }
+    @media screen and (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      tr {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+      }
+      td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-left: 6px;
+        font-weight: bold;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div id="inclusion-bouton"></div>
+
+<script>
+  fetch("bouton.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("inclusion-bouton").innerHTML = html;
+    });
+</script>
+    
+
+  <h2>Statistiques de présence</h2>
+
+  <div class="filters">
+    <input type="text" id="filtre-nom" placeholder="Filtrer par nom">
+    <input type="date" id="filtre-date">
+    <input type="text" id="filtre-promotion" placeholder="Filtrer par promotion">
+  </div>
+
+  <div class="actions">
+    <button class="btn-rond" onclick="chargerPresences()">⟳</button>
+    <button class="btn-rond" onclick="exporterExcel()">Excel</button>
+    <button class="btn-rond" onclick="exporterPDF()">PDF</button>
+  </div>
+
+  <table id="table-stats">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Cours</th>
+        <th>Promotion</th>
+        <th>Date</th>
+        <th>Matin</th>
+        <th>Midi</th>
+        <th>Après-midi</th>
+        <th>Présence (%)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    
+  </table>
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    const SUPABASE_URL = "https://vdcfcvuursbklnyuuxmt.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkY2ZjdnV1cnNia2xueXV1eG10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxODU3NzMsImV4cCI6MjA2Mzc2MTc3M30.E50vzMUdaoC5Neqjen52QARhz2X8KK0nK2LYvFUkLII";
+    let toutesPresences = [];
+
+    async function chargerPresences() {
+      const tbody = document.querySelector("#table-stats tbody");
+      tbody.innerHTML = "";
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/presences?select=*,etudiants(*)`, {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      const data = await res.json();
+      toutesPresences = data;
+      afficherPresences(data);
+    }
+
+    function afficherPresences(data) {
+      const tbody = document.querySelector("#table-stats tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(p => {
+        const pourcentage =
+          (p.matin ? 25 : 0) +
+          (p.midi ? 25 : 0) +
+          (p.apres_midi ? 25 : 0);
+
+        const tr = document.createElement("tr");
+        tr.className = pourcentage === 0 ? "rouge" : (pourcentage === 75 ? "vert" : "");
+
+        tr.innerHTML = `
+          <td data-label="Nom">${p.etudiants.nom}</td>
+          <td data-label="Cours">${p.etudiants.cours}</td>
+          <td data-label="Promotion">${p.etudiants.promotion}</td>
+          <td data-label="Date">${p.date}</td>
+          <td data-label="Matin">${p.matin ? "Oui" : "Non"}</td>
+          <td data-label="Midi">${p.midi ? "Oui" : "Non"}</td>
+          <td data-label="Après-midi">${p.apres_midi ? "Oui" : "Non"}</td>
+          <td data-label="Présence">${pourcentage}%</td>
+          <td data-label="Action"><button class="btn-suppr" onclick="supprimerPresence(${p.id})">Supprimer</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function supprimerPresence(id) {
+      if (!confirm("Supprimer cette présence ?")) return;
+      await fetch(`${SUPABASE_URL}/rest/v1/presences?id=eq.${id}`, {
+        method: "DELETE",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      chargerPresences();
+    }
+
+    function exporterExcel() {
+      const table = document.querySelector("#table-stats");
+      const wb = XLSX.utils.table_to_book(table, { sheet: "Présences" });
+      XLSX.writeFile(wb, "presences.xlsx");
+    }
+
+    function exporterPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const rows = [];
+      const headers = [];
+
+      document.querySelectorAll("#table-stats thead th").forEach(th => headers.push(th.textContent));
+      document.querySelectorAll("#table-stats tbody tr").forEach(tr => {
+        const row = [];
+        tr.querySelectorAll("td").forEach((td, i) => {
+          if (i < headers.length - 1) row.push(td.textContent); // exclut bouton
+        });
+        rows.push(row);
+      });
+
+      doc.text("Statistiques de présence", 10, 10);
+      doc.autoTable({
+        head: [headers.slice(0, -1)],
+        body: rows,
+        startY: 20
+      });
+      doc.save("presences.pdf");
+    }
+
+    document.querySelectorAll("#filtre-nom, #filtre-date, #filtre-promotion").forEach(input => {
+      input.addEventListener("input", () => {
+        const nom = document.getElementById("filtre-nom").value.toLowerCase();
+        const date = document.getElementById("filtre-date").value;
+        const promo = document.getElementById("filtre-promotion").value.toLowerCase();
+
+        const filtres = toutesPresences.filter(p =>
+          (!nom || p.etudiants.nom.toLowerCase().includes(nom)) &&
+          (!date || p.date === date) &&
+          (!promo || p.etudiants.promotion.toLowerCase().includes(promo))
+        );
+        afficherPresences(filtres);
+      });
+    });
+
+    chargerPresences();
+  </script>
+</body>
+</html>

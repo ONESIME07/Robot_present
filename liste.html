@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire de présence</title>
+  <style>
+    /* Fond animé rotatif vert/noir */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(45deg, #000000, #00ff00);
+      background-size: 400% 400%;
+      animation: gradientRotate 10s ease infinite;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    @keyframes gradientRotate {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    form {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 0 20px #00ff00;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="date"], select {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00ff00;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #00cc00;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .clignotant {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #00ff00;
+      animation: blink 1s step-start 0s infinite;
+      text-align: center;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      form {
+        padding: 15px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Enregistrer une présence</h2>
+
+  <form id="presence-form">
+    <label>Étudiant :
+      <select id="etudiant_id" required></select>
+    </label>
+
+    <label>Date :
+      <input type="date" id="date_presence" required>
+    </label>
+
+    <label><input type="checkbox" id="matin"> Présence Matin</label>
+    <label><input type="checkbox" id="midi"> Présence Midi</label>
+    <label><input type="checkbox" id="apres_midi"> Présence Après-midi</label>
+
+    <button type="submit">Enregistrer</button>
+  </form>
+
+  <p id="message"></p>
+
+  <div class="clignotant">Redirection vers la page d’accueil...</div>
+
+  <script>
+    const SUPABASE_URL = "https://vdcfcvuursbklnyuuxmt.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkY2ZjdnV1cnNia2xueXV1eG10Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxODU3NzMsImV4cCI6MjA2Mzc2MTc3M30.E50vzMUdaoC5Neqjen52QARhz2X8KK0nK2LYvFUkLII";
+
+    async function chargerEtudiants() {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/etudiants`, {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+
+      const etudiants = await response.json();
+      const select = document.getElementById("etudiant_id");
+
+      etudiants.forEach(e => {
+        const option = document.createElement("option");
+        option.value = e.id;
+        option.text = `${e.nom} - ${e.cours} - ${e.promotion}`;
+        select.appendChild(option);
+      });
+    }
+
+    chargerEtudiants();
+
+    document.getElementById("presence-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const etudiant_id = document.getElementById("etudiant_id").value;
+      const date = document.getElementById("date_presence").value;
+      const matin = document.getElementById("matin").checked;
+      const midi = document.getElementById("midi").checked;
+      const apres_midi = document.getElementById("apres_midi").checked;
+
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/presences`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          etudiant_id,
+          date,
+          matin,
+          midi,
+          apres_midi
+        })
+      });
+
+      const message = document.getElementById("message");
+
+      if (response.ok) {
+        message.textContent = "Présence enregistrée avec succès !";
+        document.getElementById("presence-form").reset();
+      } else {
+        const error = await response.text();
+        message.textContent = "Erreur : " + error;
+      }
+    });
+
+    // Redirection automatique après 8 secondes
+    setTimeout(() => {
+      window.location.href = "essaie.index.html";
+    }, 8000);
+  </script>
+</body>
+</html>
