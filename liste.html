@@ -69,7 +69,7 @@
 
     .clignotant {
       margin-top: 30px;
-      font-size: 18px;
+      font-size: 24px;
       color: #00ff00;
       animation: blink 1s step-start 0s infinite;
       text-align: center;
@@ -79,6 +79,11 @@
       50% {
         opacity: 0;
       }
+    }
+
+    .clignotant a {
+      text-decoration: none;
+      color: #00ff00;
     }
 
     @media (max-width: 600px) {
@@ -113,7 +118,10 @@
 
   <p id="message"></p>
 
-  <div class="clignotant">Redirection vers la page d’accueil...</div>
+  <!-- Maison clignotante comme lien de redirection -->
+  <div class="clignotant">
+    <a href="essaie.index.html" title="Retour à l'accueil">🏠</a>
+  </div>
 
   <script>
     const SUPABASE_URL = "https://vdcfcvuursbklnyuuxmt.supabase.co";
