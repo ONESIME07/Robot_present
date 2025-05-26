@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Statistiques des présences</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -79,21 +79,42 @@
       }
     }
 
-    /* Style pour bouton de retour */
+    /* Bouton retour apropos.html en bas à droite */
     .btn-retour {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 87px;
-      height: 87px;
+      width: 48px;
+      height: 48px;
       display: inline-block;
       z-index: 999;
       animation: clignote 1s infinite alternate;
     }
-
     .btn-retour svg {
       width: 100%;
       height: 100%;
+    }
+
+    /* Bouton maison clignotant centré en haut */
+    .btn-home {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: clignote 1s infinite alternate;
+      cursor: pointer;
+    }
+    .btn-home svg {
+      width: 30px;
+      height: 30px;
     }
 
     @keyframes clignote {
@@ -116,9 +137,9 @@
   <h2>Statistiques de présence</h2>
 
   <div class="filters">
-    <input type="text" id="filtre-nom" placeholder="Filtrer par nom">
-    <input type="date" id="filtre-date">
-    <input type="text" id="filtre-promotion" placeholder="Filtrer par promotion">
+    <input type="text" id="filtre-nom" placeholder="Filtrer par nom" />
+    <input type="date" id="filtre-date" />
+    <input type="text" id="filtre-promotion" placeholder="Filtrer par promotion" />
   </div>
 
   <div class="actions">
@@ -144,7 +165,15 @@
     <tbody></tbody>
   </table>
 
-  <!-- Bouton de retour vers apropos.html -->
+  <!-- Bouton maison clignotant centré en haut vers essaie.index.html -->
+  <a href="essaie.index.html" class="btn-home" title="Retour à l'accueil">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+      <circle cx="12" cy="12" r="12" fill="#28a745"/>
+      <path d="M10 16v-4H8l4-4 4 4h-2v4h-4z"/>
+    </svg>
+  </a>
+
+  <!-- Bouton cercle flèche bleu clignotant en bas à droite vers apropos.html -->
   <a href="apropos.html" class="btn-retour" title="Aller à la page suivante">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="12" fill="#007bff"/>
