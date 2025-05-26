@@ -9,9 +9,9 @@
       margin: 0;
       padding: 0;
       color: white;
+      background-color: transparent;
       position: relative;
       z-index: 0;
-      background-color: transparent;
     }
 
     body::before {
@@ -71,17 +71,15 @@
       padding: 40px;
       max-width: 1200px;
       margin: 30px auto;
-      background: rgba(0, 0, 0, 0.015);
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.01);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       font-size: 22px;
       line-height: 1.6;
-      animation: couleur-cycle 5s infinite alternate;
-    }
-
-    @keyframes couleur-cycle {
-      0%   { color: red; }
-      100% { color: darkblue; }
+      color: white;
     }
 
     .liens-grid {
@@ -101,11 +99,21 @@
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.005);
-      font-size: 22px;
+      font-size: 26px;
       color: white;
       text-decoration: none;
       text-align: center;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      animation: blink-white 1.5s infinite alternate;
+    }
+
+    .lien-acceuil i {
+      font-size: 36px;
+    }
+
+    @keyframes blink-white {
+      0%   { text-shadow: 0 0 5px white; }
+      100% { text-shadow: 0 0 20px white; }
     }
 
     .lien-acceuil:hover {
@@ -113,34 +121,13 @@
       transform: scale(1.02);
     }
 
-    .lien-acceuil i {
-      font-size: 35px;
-    }
-
     @media (max-width: 768px) {
-      .section {
-        padding: 20px;
-        font-size: 18px;
-      }
-
-      input, button, select {
-        font-size: 16px;
-        padding: 10px;
-      }
-
-      nav {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      nav button, nav a {
-        width: 90%;
-        margin: 5px 0;
-      }
-
-      .liens-grid {
-        grid-template-columns: 1fr;
-      }
+      .section { padding: 20px; font-size: 18px; }
+      input, button, select { font-size: 16px; padding: 10px; }
+      nav { flex-direction: column; align-items: center; }
+      nav button, nav a { width: 90%; margin: 5px 0; }
+      .lien-acceuil { font-size: 22px; }
+      .lien-acceuil i { font-size: 30px; }
     }
   </style>
 
