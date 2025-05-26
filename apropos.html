@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>À propos - Hexagone des icônes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: Garamond, sans-serif;
+      background-color: #121212;
+      color: #eee;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+    }
+    .container {
+      max-width: 800px;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: auto;
+    }
+    
+    /* Conteneur hexagone */
+    .hexagon {
+      position: relative;
+      width: 300px;
+      height: 260px;
+      margin: 40px auto 0 auto;
+    }
+    
+    /* Taille adaptative des icônes */
+    .hexagon a {
+      position: absolute;
+      font-size: clamp(2.5rem, 5vw, 3rem);
+      width: 3.5em;
+      height: 3.5em;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .hexagon a:hover {
+      animation: shake 0.4s ease;
+      transform: scale(1.3);
+      z-index: 10;
+    }
+    
+    /* Positionnement des 6 icônes en hexagone */
+    .hexagon a:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+    .hexagon a:nth-child(2) { top: 65px; left: 260px; transform: translate(-50%, -50%); }
+    .hexagon a:nth-child(3) { top: 195px; left: 215px; transform: translate(-50%, -50%); }
+    .hexagon a:nth-child(4) { top: 230px; left: 50%; transform: translate(-50%, -50%); }
+    .hexagon a:nth-child(5) { top: 195px; left: 45px; transform: translate(-50%, -50%); }
+    .hexagon a:nth-child(6) { top: 65px; left: 5px; transform: translate(-50%, -50%); }
+    
+    @keyframes shake {
+      0% { transform: scale(1.3) translateX(0); }
+      25% { transform: scale(1.3) translateX(-3px); }
+      50% { transform: scale(1.3) translateX(3px); }
+      75% { transform: scale(1.3) translateX(-2px); }
+      100% { transform: scale(1.3) translateX(0); }
+    }
+    
+    /* Couleurs des icônes */
+    .fa-whatsapp { color: #25D366; }
+    .fa-facebook { color: #1877F2; }
+    .fa-instagram { color: #E1306C; }
+    .fa-tiktok { color: #69C9D0; }
+    .fa-telegram { color: #0088cc; }
+    .fa-envelope { color: #D14836; }
+
+    /* Responsive */
+    @media (max-width: 400px) {
+      .hexagon {
+        width: 220px;
+        height: 190px;
+      }
+      .hexagon a:nth-child(2) { left: 190px; top: 50px; }
+      .hexagon a:nth-child(3) { left: 160px; top: 140px; }
+      .hexagon a:nth-child(5) { left: 35px; top: 140px; }
+      .hexagon a:nth-child(6) { left: 15px; top: 50px; }
+      .hexagon a {
+        font-size: clamp(2rem, 6vw, 2.5rem);
+        width: 3em;
+        height: 3em;
+      }
+    }
+
+    /* Bouton retour accueil */
+    .btn-home {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: #25D366;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      z-index: 1000;
+      color: white;
+      font-size: 1.5rem;
+    }
+    .btn-home:hover {
+      background-color: #1da851;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>À propos</h1>
+    <p>
+      Bienvenue dans notre application de gestion de présence. Cette solution intuitive facilite le suivi
+      et l’organisation des présences des étudiants. Elle permet aux responsables de mieux gérer la pédagogie,
+      la participation et les statistiques de présence.
+    </p>
+
+    <div class="hexagon" aria-label="Réseaux sociaux">
+      <a href="mailto:nanikuton@gmail.com" title="E-mail (Gmail)">
+        <i class="fas fa-envelope"></i>
+      </a>
+      <a href="https://wa.me/243891913173" title="WhatsApp +243891913173" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="https://www.facebook.com/onesimediangani.onesimediangani" title="Facebook" target="_blank">
+        <i class="fab fa-facebook"></i>
+      </a>
+      <a href="https://www.instagram.com/onesimenani?igsh=MXdicmtvNXJhdG94bA==" title="Instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.tiktok.com/@onesimenani?_t=ZM-8wY3suKYqfN&_r=1" title="TikTok" target="_blank">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <a href="#" title="Telegram" target="_blank">
+        <i class="fab fa-telegram"></i>
+      </a>
+    </div>
+  </div>
+
+    <a href="essaie.index.html" class="btn-home" title="Retour à la page d'accueil" aria-label="Retour accueil">
+  <i class="fas fa-home"></i>
+</a>
+  </a>
+</body>
+</html>
